@@ -3,3 +3,5 @@ description = Create search factes using the Facet API module.
 core = 7.x
 package = Ding!
 dependencies[] = facetapi
+
+files[] = plugins/facetapi/adapter.inc

@@ -1,1 +1,111 @@
 <?php
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ding_facets_menu() {
+  $items = array();
+
+  $items['admin/config/search/ding_facets'] = array(
+    'title' => 'Ding facets',
+    'description' => 'Configure and setup facet behviour for ting searches',
+    'page callback' => 'ding_facets_settings',
+    'access arguments' => array('administer search'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_facetapi_searcher_info().
+ */
+function ding_facets_facetapi_searcher_info() {
+  return array(
+    'ding_facets' => array(
+      'label' => t('Ding facets serach'),
+      'adapter' => 'ding_facets',
+      'url processor' => 'standard',
+      'types' => array('ting_search'),
+      'path' => 'admin/config/search/ding_facets',
+      'supports facet missing' => TRUE,
+      'supports facet mincount' => TRUE,
+      'include default facets' => FALSE,
+    ),
+  );
+}
+
+function ding_facets_settings() {
+  $form = array();
+  return $form;
+}
+
+/**
+ * Implements hook_facetapi_facet_info().
+ */
+function ding_facets_facetapi_facet_info(array $searcher_info) {
+  $facets = array();
+
+//  facet.acSource 	/ting:container/dkabm:record/ac:source 	facet
+//  facet.category 	/ting:container/dkabm:record/dcterms:audience[not(@*)] 	facet
+//  facet.genreCategory 	/ting:container/dkabm:record/dc:subject[.='fiktion'] | /ting:container/dkabm:record/dc:subject[.='nonfiktion'] 	facet
+//  facet.creator 	/ting:container/dkabm:record/dc:creator[not(@xsi:type='oss:sort')] | /ting:container/dkabm:record/dc:contributor 	facet
+//  facet.type 	/ting:container/dkabm:record/dc:type 	facet
+//  facet.subject 	/ting:container/dkabm:record/dc:subject[not(@xsi:type='dkdcplus:genre')] 	facet
+//  facet.date 	/ting:container/dkabm:record/dc:date 	facet
+//  facet.language 	/ting:container/dkabm:record/dc:language[not(@*)]
+
+  if (isset($searcher_info['types']['ting_search'])) {
+    $facets['ac_source'] = array(
+      'label' => t('Source'),
+      'description' => t('Material type (acSource).'),
+      'field' => 'facet.acSource',
+      "query type" => "facetapi_example_term",
+    );
+
+    $facets["category"] = array(
+      'label' => t('Category'),
+      'description' => t('Target group (category)'),
+      'field' => 'facet.category',
+      "query type" => "facetapi_example_term",
+    );
+  }
+
+  return $facets;
+}
+
+/**
+ * Implements hook_facetapi_adapters().
+ */
+function ding_facets_facetapi_adapters() {
+  return array(
+    'ding_facets' => array(
+      'handler' => array(
+        'class' => 'DingFacetsAdapter',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_facetapi_query_types().
+ */
+
+/**
+ * Implements hook_facetapi_url_processors().
+ */
+
+/**
+ * Implements hook_facetapi_widgets().
+ */
+
+/**
+ * Implements hook_search_info().
+ */
+
+/**
+ * Implements hook_search_execute().
+ */
